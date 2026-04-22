@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DB Explorer — Free Database Query Tool & Explorer</title>
+  <meta name="description" content="A free, cross-platform database query tool. Connect to PostgreSQL, MySQL, Oracle, SQL Server, SQLite, DynamoDB and more. AI-powered SQL generation, schema diagrams, health dashboard.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">⛁</span> DB Explorer
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#screenshots">Screenshots</a></li>
+        <li><a href="#databases">Databases</a></li>
+        <li><a href="#release-notes">What's New</a></li>
+        <li><a href="#download" class="btn btn-nav">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <div class="hero-badge">v3.0.6 — Free &amp; Cross-Platform</div>
+      <h1>The database tool<br>you'll actually enjoy using</h1>
+      <p class="hero-subtitle">
+        Connect to any database, write SQL with AI assistance, explore schemas visually,
+        and monitor health — all from one clean interface.
+      </p>
+      <div class="hero-actions">
+        <a href="https://github.com/adeptashishsriv/db-explorer/releases/latest" class="btn btn-primary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download from GitHub
+        </a>
+        <a href="https://sourceforge.net/projects/db-explorer/files/latest/download" class="btn btn-secondary btn-lg">
+          Download from SourceForge
+        </a>
+      </div>
+      <p class="hero-note">Requires Java 17+. Works on Windows, macOS, and Linux.</p>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Everything you need, nothing you don't</h2>
+        <p>Built for developers, DBAs, and data analysts who work with databases daily.</p>
+      </div>
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>AI SQL Generator</h3>
+          <p>Describe what you need in plain English. The AI knows your schema and generates ready-to-run SQL with proper table and column names.</p>
+          <span class="feature-tag">OpenAI · Claude · DeepSeek · Gemini</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3>Multi-Tab Query Editor</h3>
+          <p>Syntax highlighting, auto-complete, undo/redo. Each tab gets its own connection — run queries in parallel without interference.</p>
+          <span class="feature-tag">Ctrl+Enter to run</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Fast Results</h3>
+          <p>Results load instantly, even on tables with millions of rows. Scroll to load more — no fixed row limit. Click headers to sort.</p>
+          <span class="feature-tag">Lazy loading</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🗂️</div>
+          <h3>Schema Explorer</h3>
+          <p>Browse schemas, tables, views, materialized views, sequences, indexes, functions, and procedures in a clean tree view.</p>
+          <span class="feature-tag">Right-click for quick actions</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Schema Diagrams</h3>
+          <p>Interactive ER diagrams showing tables and foreign key relationships. Drag to rearrange, scroll to zoom. Export as PNG or Mermaid.</p>
+          <span class="feature-tag">Visual database design</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Execution Plans</h3>
+          <p>Analyze query performance with database-native explain plans. Interactive trees for PostgreSQL, color-coded tables for MySQL.</p>
+          <span class="feature-tag">Performance tuning</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💓</div>
+          <h3>Health Dashboard</h3>
+          <p>Monitor active sessions, cache hit ratio, lock waits, running queries with duration, and JVM memory — auto-refreshes every 2 seconds.</p>
+          <span class="feature-tag">Real-time monitoring</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📤</div>
+          <h3>Data Export</h3>
+          <p>Export as DDL, INSERT, UPDATE, or CSV. Streams to disk so even large tables won't run out of memory. Copy or save to file.</p>
+          <span class="feature-tag">Bulk export</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>13 Themes</h3>
+          <p>Switch instantly from the toolbar: Flat Dark, Darcula, Ocean Blue, Forest Green, Sunset Purple, Cherry Red, Arctic Frost, and more.</p>
+          <span class="feature-tag">Remembered across restarts</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="screenshots" id="screenshots">
+    <div class="container">
+      <div class="section-header">
+        <h2>See it in action</h2>
+        <p>A clean, focused interface that stays out of your way.</p>
+      </div>
+      <div class="screenshot-gallery">
+        <div class="screenshot-card screenshot-main">
+          <img src="images/app-screen-shot.jpg" alt="DB Explorer main application window showing query editor and results" loading="lazy">
+          <span class="screenshot-label">Query Editor &amp; Results</span>
+        </div>
+        <div class="screenshot-card">
+          <img src="images/schema-screenshot.jpg" alt="DB Explorer schema diagram showing ER relationships" loading="lazy">
+          <span class="screenshot-label">Schema Diagram</span>
+        </div>
+        <div class="screenshot-card">
+          <img src="images/ai-setup.jpg" alt="DB Explorer AI assistant configuration" loading="lazy">
+          <span class="screenshot-label">AI Assistant Setup</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Databases -->
+  <section class="databases" id="databases">
+    <div class="container">
+      <div class="section-header">
+        <h2>Connect to any database</h2>
+        <p>First-class support for major databases, plus any JDBC-compatible system via custom drivers.</p>
+      </div>
+      <div class="db-grid">
+        <div class="db-card">
+          <div class="db-icon">🐘</div>
+          <span>PostgreSQL</span>
+        </div>
+        <div class="db-card">
+          <div class="db-icon">🐬</div>
+          <span>MySQL</span>
+        </div>
+        <div class="db-card">
+          <div class="db-icon">🔶</div>
+          <span>Oracle</span>
+        </div>
+        <div class="db-card">
+          <div class="db-icon">🔷</div>
+          <span>SQL Server</span>
+        </div>
+        <div class="db-card">
+          <div class="db-icon">🪶</div>
+          <span>SQLite</span>
+        </div>
+        <div class="db-card">
+          <div class="db-icon">⚡</div>
+          <span>DynamoDB</span>
+        </div>
+        <div class="db-card">
+          <div class="db-icon">🔌</div>
+          <span>Any JDBC</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Keyboard Shortcuts -->
+  <section class="shortcuts">
+    <div class="container">
+      <div class="section-header">
+        <h2>Designed for speed</h2>
+        <p>Keep your hands on the keyboard.</p>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut">
+          <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+          <span>Run query</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Ctrl</kbd> + <kbd>Space</kbd>
+          <span>Auto-complete</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Ctrl</kbd> + <kbd>F</kbd>
+          <span>Find in editor</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Ctrl</kbd> + <kbd>/</kbd>
+          <span>Comment/uncomment</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Ctrl</kbd> + <kbd>Z</kbd>
+          <span>Undo</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Ctrl</kbd> + <kbd>Y</kbd>
+          <span>Redo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Release Notes -->
+  <section class="release-notes" id="release-notes">
+    <div class="container">
+      <div class="section-header">
+        <h2>What's new in v3.0.6</h2>
+        <p>Released April 2026</p>
+      </div>
+      <div class="release-columns">
+        <div class="release-col">
+          <h3>✨ New</h3>
+          <ul>
+            <li>Export schema diagrams as PNG or Mermaid markup</li>
+            <li>PK / FK icons on columns in the schema tree</li>
+            <li>Independent query tabs — run queries in parallel</li>
+            <li>Ctrl+/ to comment/uncomment SQL lines</li>
+            <li>Connection name shown on Health Dashboard</li>
+          </ul>
+        </div>
+        <div class="release-col">
+          <h3>🔧 Fixed</h3>
+          <ul>
+            <li>Health dashboard refreshes on connection switch</li>
+            <li>Azure SQL sessions show accurate status</li>
+            <li>AI Assistant layout no longer overlaps</li>
+            <li>Schema diagram stays within main window</li>
+            <li>Fixed PostgreSQL "transaction aborted" errors</li>
+            <li>Fixed "portal does not exist" errors across tabs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download CTA -->
+  <section class="download" id="download">
+    <div class="container">
+      <div class="download-card">
+        <h2>Ready to try it?</h2>
+        <p>Download the JAR, double-click, and connect to your first database in under a minute.</p>
+        <div class="download-actions">
+          <a href="https://github.com/adeptashishsriv/db-explorer/releases/latest" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub Releases
+          </a>
+          <a href="https://sourceforge.net/projects/db-explorer/files/latest/download" class="btn btn-secondary btn-lg">
+            SourceForge
+          </a>
+        </div>
+        <div class="download-info">
+          <div class="info-item">
+            <strong>Requirements</strong>
+            <span>Java 17+</span>
+          </div>
+          <div class="info-item">
+            <strong>Platforms</strong>
+            <span>Windows · macOS · Linux</span>
+          </div>
+          <div class="info-item">
+            <strong>Install</strong>
+            <span>No installer needed</span>
+          </div>
+          <div class="info-item">
+            <strong>Price</strong>
+            <span>Free</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="footer-logo"><span class="logo-icon">⛁</span> DB Explorer</span>
+        <p>© 2026 Astro Adept AI Labs. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/adeptashishsriv/db-explorer">GitHub</a>
+        <a href="https://sourceforge.net/projects/db-explorer">SourceForge</a>
+        <a href="https://db-explorer.sourceforge.net/">Forum</a>
+        <a href="mailto:adeptashish@gmail.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu toggle
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // Close menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Animate on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .screenshot-card, .db-card, .shortcut, .release-col').forEach(el => {
+      el.classList.add('animate-in');
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
