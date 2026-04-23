@@ -326,7 +326,7 @@
   </footer>
 
   <!-- Theme particle canvas -->
-  <canvas id="themeCanvas"></canvas>
+  <canvas id="themeCanvas" style="position:fixed;top:0;left:0;z-index:9999;pointer-events:none;"></canvas>
 
   <script>
     // Navbar scroll effect
@@ -372,254 +372,254 @@
     });
 
     // ===== Theme Particle Animations =====
-    const canvas = document.getElementById('themeCanvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animId = null;
+    (function() {
+      var canvas = document.getElementById('themeCanvas');
+      var ctx = canvas.getContext('2d');
+      var particles = [];
+      var animId = null;
+      var W = 0, H = 0;
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+      function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+      }
+      resize();
+      window.addEventListener('resize', resize);
 
-    // Particle class
-    class Particle {
-      constructor(type) {
-        this.x = Math.random() * canvas.width;
-        this.y = -20 - Math.random() * 100;
+      function Particle(type) {
+        this.x = Math.random() * W;
+        this.y = -20 - Math.random() * 120;
         this.type = type;
-        this.opacity = 0.7 + Math.random() * 0.3;
-        this.size = 8 + Math.random() * 16;
-        this.speedY = 1.5 + Math.random() * 2.5;
-        this.speedX = (Math.random() - 0.5) * 1.5;
-        this.rotation = Math.random() * Math.PI * 2;
-        this.rotSpeed = (Math.random() - 0.5) * 0.06;
-        this.wobble = Math.random() * Math.PI * 2;
-        this.wobbleSpeed = 0.02 + Math.random() * 0.03;
+        this.alpha = 0.8 + Math.random() * 0.2;
+        this.size = 10 + Math.random() * 18;
+        this.vy = 1.2 + Math.random() * 2.8;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.rot = Math.random() * 6.28;
+        this.rotV = (Math.random() - 0.5) * 0.08;
+        this.wobble = Math.random() * 6.28;
+        this.wobbleV = 0.02 + Math.random() * 0.04;
+        this.alive = true;
       }
 
-      update() {
-        this.y += this.speedY;
-        this.wobble += this.wobbleSpeed;
-        this.x += this.speedX + Math.sin(this.wobble) * 0.5;
-        this.rotation += this.rotSpeed;
-        this.opacity -= 0.003;
-        return this.y < canvas.height + 30 && this.opacity > 0;
-      }
+      Particle.prototype.update = function() {
+        this.y += this.vy;
+        this.wobble += this.wobbleV;
+        this.x += this.vx + Math.sin(this.wobble) * 0.7;
+        this.rot += this.rotV;
+        this.alpha -= 0.004;
+        if (this.y > H + 40 || this.alpha <= 0) this.alive = false;
+      };
 
-      draw() {
+      Particle.prototype.draw = function() {
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.rotation);
-        ctx.globalAlpha = this.opacity;
+        ctx.rotate(this.rot);
+        ctx.globalAlpha = Math.max(0, this.alpha);
 
-        switch (this.type) {
-          case 'bubble':
-            this.drawBubble();
-            break;
-          case 'leaf':
-            this.drawLeaf();
-            break;
-          case 'star':
-            this.drawStar();
-            break;
-          case 'petal':
-            this.drawPetal();
-            break;
-          case 'sparkle':
-            this.drawSparkle();
-            break;
-        }
+        if (this.type === 'bubble') this.drawBubble();
+        else if (this.type === 'leaf') this.drawLeaf();
+        else if (this.type === 'star') this.drawStar();
+        else if (this.type === 'petal') this.drawPetal();
+        else if (this.type === 'sparkle') this.drawSparkle();
 
         ctx.restore();
-      }
+      };
 
-      drawBubble() {
-        const r = this.size * 0.6;
-        const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
-        grad.addColorStop(0, 'rgba(56, 189, 248, 0.4)');
-        grad.addColorStop(0.5, 'rgba(14, 165, 233, 0.15)');
-        grad.addColorStop(1, 'rgba(14, 165, 233, 0.05)');
+      Particle.prototype.drawBubble = function() {
+        var r = this.size * 0.65;
+        // body
+        var g = ctx.createRadialGradient(-r*0.3, -r*0.3, r*0.05, 0, 0, r);
+        g.addColorStop(0, 'rgba(120, 210, 255, 0.5)');
+        g.addColorStop(0.6, 'rgba(14, 165, 233, 0.2)');
+        g.addColorStop(1, 'rgba(14, 165, 233, 0.02)');
         ctx.beginPath();
-        ctx.arc(0, 0, r, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
+        ctx.arc(0, 0, r, 0, 6.28);
+        ctx.fillStyle = g;
         ctx.fill();
         // highlight
         ctx.beginPath();
-        ctx.arc(-r * 0.25, -r * 0.25, r * 0.2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.arc(-r*0.3, -r*0.3, r*0.22, 0, 6.28);
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
         ctx.fill();
         // rim
         ctx.beginPath();
-        ctx.arc(0, 0, r, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
-        ctx.lineWidth = 1;
+        ctx.arc(0, 0, r, 0, 6.28);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 1.2;
         ctx.stroke();
-      }
+      };
 
-      drawLeaf() {
-        const s = this.size * 0.7;
+      Particle.prototype.drawLeaf = function() {
+        var s = this.size * 0.75;
         ctx.beginPath();
         ctx.moveTo(0, -s);
-        ctx.bezierCurveTo(s * 0.6, -s * 0.6, s * 0.6, s * 0.3, 0, s);
-        ctx.bezierCurveTo(-s * 0.6, s * 0.3, -s * 0.6, -s * 0.6, 0, -s);
+        ctx.bezierCurveTo(s*0.7, -s*0.5, s*0.7, s*0.4, 0, s);
+        ctx.bezierCurveTo(-s*0.7, s*0.4, -s*0.7, -s*0.5, 0, -s);
         ctx.closePath();
-        const grad = ctx.createLinearGradient(0, -s, 0, s);
-        grad.addColorStop(0, '#4ade80');
-        grad.addColorStop(1, '#16a34a');
-        ctx.fillStyle = grad;
+        var g = ctx.createLinearGradient(0, -s, 0, s);
+        g.addColorStop(0, '#4ade80');
+        g.addColorStop(1, '#15803d');
+        ctx.fillStyle = g;
         ctx.fill();
         // vein
         ctx.beginPath();
-        ctx.moveTo(0, -s * 0.8);
-        ctx.lineTo(0, s * 0.8);
-        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-        ctx.lineWidth = 0.8;
+        ctx.moveTo(0, -s*0.7);
+        ctx.lineTo(0, s*0.7);
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 1;
         ctx.stroke();
-      }
+      };
 
-      drawStar() {
-        const s = this.size * 0.5;
-        const spikes = 4;
+      Particle.prototype.drawStar = function() {
+        var s = this.size * 0.55;
         ctx.beginPath();
-        for (let i = 0; i < spikes * 2; i++) {
-          const r = i % 2 === 0 ? s : s * 0.35;
-          const angle = (i * Math.PI) / spikes - Math.PI / 2;
-          const x = Math.cos(angle) * r;
-          const y = Math.sin(angle) * r;
-          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        for (var i = 0; i < 8; i++) {
+          var r = i % 2 === 0 ? s : s * 0.38;
+          var a = (i * Math.PI) / 4 - Math.PI / 2;
+          var px = Math.cos(a) * r;
+          var py = Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
         }
         ctx.closePath();
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, s);
-        grad.addColorStop(0, '#fde68a');
-        grad.addColorStop(0.5, '#c084fc');
-        grad.addColorStop(1, '#a855f7');
-        ctx.fillStyle = grad;
+        var g = ctx.createRadialGradient(0, 0, 0, 0, 0, s);
+        g.addColorStop(0, '#fef08a');
+        g.addColorStop(0.4, '#e9d5ff');
+        g.addColorStop(1, '#a855f7');
+        ctx.fillStyle = g;
         ctx.fill();
         // glow
         ctx.shadowColor = '#c084fc';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.fill();
         ctx.shadowBlur = 0;
-      }
+      };
 
-      drawPetal() {
-        const s = this.size * 0.6;
+      Particle.prototype.drawPetal = function() {
+        var s = this.size * 0.65;
         ctx.beginPath();
         ctx.moveTo(0, -s);
-        ctx.bezierCurveTo(s * 0.8, -s * 0.5, s * 0.5, s * 0.5, 0, s * 0.3);
-        ctx.bezierCurveTo(-s * 0.5, s * 0.5, -s * 0.8, -s * 0.5, 0, -s);
+        ctx.bezierCurveTo(s*0.9, -s*0.4, s*0.6, s*0.5, 0, s*0.35);
+        ctx.bezierCurveTo(-s*0.6, s*0.5, -s*0.9, -s*0.4, 0, -s);
         ctx.closePath();
-        const grad = ctx.createLinearGradient(-s, -s, s, s);
-        grad.addColorStop(0, '#fda4af');
-        grad.addColorStop(0.5, '#fb7185');
-        grad.addColorStop(1, '#f43f5e');
-        ctx.fillStyle = grad;
+        var g = ctx.createLinearGradient(-s, -s, s, s);
+        g.addColorStop(0, '#fecdd3');
+        g.addColorStop(0.5, '#fb7185');
+        g.addColorStop(1, '#e11d48');
+        ctx.fillStyle = g;
         ctx.fill();
-        // subtle highlight
+        // highlight
         ctx.beginPath();
-        ctx.ellipse(-s * 0.15, -s * 0.3, s * 0.15, s * 0.25, -0.3, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.arc(-s*0.15, -s*0.35, s*0.18, 0, 6.28);
+        ctx.fillStyle = 'rgba(255,255,255,0.25)';
         ctx.fill();
-      }
+      };
 
-      drawSparkle() {
-        const s = this.size * 0.3;
+      Particle.prototype.drawSparkle = function() {
+        var s = this.size * 0.35;
+        var g = ctx.createRadialGradient(0, 0, 0, 0, 0, s);
+        g.addColorStop(0, 'rgba(255,255,255,0.9)');
+        g.addColorStop(0.4, 'rgba(59, 130, 246, 0.4)');
+        g.addColorStop(1, 'rgba(59, 130, 246, 0)');
         ctx.beginPath();
-        ctx.arc(0, 0, s, 0, Math.PI * 2);
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, s);
-        grad.addColorStop(0, 'rgba(255,255,255,0.8)');
-        grad.addColorStop(0.5, 'rgba(59, 130, 246, 0.3)');
-        grad.addColorStop(1, 'rgba(59, 130, 246, 0)');
-        ctx.fillStyle = grad;
+        ctx.arc(0, 0, s, 0, 6.28);
+        ctx.fillStyle = g;
         ctx.fill();
-      }
-    }
+      };
 
-    function spawnParticles(type, count) {
-      // Stop any running animation
-      if (animId) {
-        cancelAnimationFrame(animId);
-        animId = null;
-      }
-      particles = [];
-      canvas.style.pointerEvents = 'none';
-      canvas.style.opacity = '1';
-
-      let spawned = 0;
-      const spawnInterval = setInterval(() => {
-        const batch = Math.min(4, count - spawned);
-        for (let i = 0; i < batch; i++) {
-          particles.push(new Particle(type));
-        }
-        spawned += batch;
-        if (spawned >= count) clearInterval(spawnInterval);
-      }, 60);
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles = particles.filter(p => p.update());
-        particles.forEach(p => p.draw());
-
-        if (particles.length > 0) {
-          animId = requestAnimationFrame(animate);
-        } else {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          canvas.style.opacity = '0';
+      function spawnParticles(type, count) {
+        if (animId) {
+          cancelAnimationFrame(animId);
           animId = null;
         }
-      }
-      animate();
-    }
+        resize(); // ensure canvas matches viewport
+        particles = [];
 
-    const themeAnimations = {
-      ocean:    { type: 'bubble',  count: 40 },
-      forest:   { type: 'leaf',    count: 35 },
-      sunset:   { type: 'star',    count: 45 },
-      rose:     { type: 'petal',   count: 40 },
-      midnight: { type: 'sparkle', count: 35 },
-      light:    { type: 'sparkle', count: 30 },
-    };
+        var spawned = 0;
+        var timer = setInterval(function() {
+          var batch = Math.min(5, count - spawned);
+          for (var i = 0; i < batch; i++) {
+            particles.push(new Particle(type));
+          }
+          spawned += batch;
+          if (spawned >= count) clearInterval(timer);
+        }, 50);
+
+        function loop() {
+          ctx.clearRect(0, 0, W, H);
+          var alive = [];
+          for (var i = 0; i < particles.length; i++) {
+            particles[i].update();
+            if (particles[i].alive) {
+              particles[i].draw();
+              alive.push(particles[i]);
+            }
+          }
+          particles = alive;
+          if (particles.length > 0 || spawned < count) {
+            animId = requestAnimationFrame(loop);
+          } else {
+            ctx.clearRect(0, 0, W, H);
+            animId = null;
+          }
+        }
+        animId = requestAnimationFrame(loop);
+      }
+
+      var themeAnimations = {
+        ocean:    { type: 'bubble',  count: 45 },
+        forest:   { type: 'leaf',    count: 40 },
+        sunset:   { type: 'star',    count: 50 },
+        rose:     { type: 'petal',   count: 45 },
+        midnight: { type: 'sparkle', count: 40 },
+        light:    { type: 'sparkle', count: 35 }
+      };
+
+      // Expose for theme switcher
+      window.triggerThemeAnimation = function(theme) {
+        var anim = themeAnimations[theme];
+        if (anim) spawnParticles(anim.type, anim.count);
+      };
+    })();
 
     // Theme switcher
-    const themeBtn = document.getElementById('themeToggle');
-    const themeDropdown = document.getElementById('themeDropdown');
+    var themeBtn = document.getElementById('themeToggle');
+    var themeDropdown = document.getElementById('themeDropdown');
 
-    themeBtn.addEventListener('click', (e) => {
+    themeBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       themeDropdown.classList.toggle('open');
     });
 
-    document.addEventListener('click', () => {
+    document.addEventListener('click', function() {
       themeDropdown.classList.remove('open');
     });
 
-    themeDropdown.addEventListener('click', (e) => {
+    themeDropdown.addEventListener('click', function(e) {
       e.stopPropagation();
     });
 
-    document.querySelectorAll('.theme-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const theme = btn.dataset.theme;
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var theme = btn.dataset.theme;
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('db-explorer-theme', theme);
         themeDropdown.classList.remove('open');
         // Update active state
-        document.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.theme-option').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
-        // Trigger animation
-        const anim = themeAnimations[theme];
-        if (anim) spawnParticles(anim.type, anim.count);
+        // Trigger particle animation
+        window.triggerThemeAnimation(theme);
       });
     });
 
-    // Load saved theme
-    const saved = localStorage.getItem('db-explorer-theme');
+    // Load saved theme (no animation on load)
+    var saved = localStorage.getItem('db-explorer-theme');
     if (saved) {
       document.documentElement.setAttribute('data-theme', saved);
-      const active = document.querySelector(`.theme-option[data-theme="${saved}"]`);
+      var active = document.querySelector('.theme-option[data-theme="' + saved + '"]');
       if (active) active.classList.add('active');
     } else {
       document.querySelector('.theme-option[data-theme="midnight"]').classList.add('active');
