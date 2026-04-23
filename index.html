@@ -24,6 +24,7 @@
       </button>
       <ul class="nav-links" id="navLinks">
         <li><a href="#features">Features</a></li>
+        <li><a href="#demo">Demo</a></li>
         <li><a href="#screenshots">Screenshots</a></li>
         <li><a href="#databases">Databases</a></li>
         <li><a href="#release-notes">What's New</a></li>
@@ -78,66 +79,134 @@
         <div class="feature-card">
           <div class="feature-icon">🤖</div>
           <h3>AI SQL Generator</h3>
-          <p>Describe what you need in plain English. The AI knows your schema and generates ready-to-run SQL with proper table and column names.</p>
+          <p>Describe what you need in plain English. The AI knows your schema and writes ready-to-run SQL.</p>
           <span class="feature-tag">OpenAI · Claude · DeepSeek · Gemini</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📝</div>
           <h3>Multi-Tab Query Editor</h3>
-          <p>Syntax highlighting, auto-complete, undo/redo. Each tab gets its own connection — run queries in parallel without interference.</p>
+          <p>Syntax highlighting, auto-complete, undo/redo. Each tab gets its own connection.</p>
           <span class="feature-tag">Ctrl+Enter to run</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>Fast Results</h3>
-          <p>Results load instantly, even on tables with millions of rows. Scroll to load more — no fixed row limit. Click headers to sort.</p>
+          <p>Instant results even on millions of rows. Scroll to load more — no fixed row limit.</p>
           <span class="feature-tag">Lazy loading</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🗂️</div>
           <h3>Schema Explorer</h3>
-          <p>Browse schemas, tables, views, materialized views, sequences, indexes, functions, and procedures in a clean tree view.</p>
-          <span class="feature-tag">Right-click for quick actions</span>
+          <p>Browse schemas, tables, views, sequences, indexes, functions, and procedures in a tree.</p>
+          <span class="feature-tag">Right-click quick actions</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📊</div>
           <h3>Schema Diagrams</h3>
-          <p>Interactive ER diagrams showing tables and foreign key relationships. Drag to rearrange, scroll to zoom. Export as PNG or Mermaid.</p>
+          <p>Interactive ER diagrams with drag, zoom, and auto-layout. Export as PNG or Mermaid.</p>
           <span class="feature-tag">Visual database design</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📈</div>
           <h3>Execution Plans</h3>
-          <p>Analyze query performance with database-native explain plans. Interactive trees for PostgreSQL, color-coded tables for MySQL.</p>
+          <p>Database-native explain plans. Interactive trees for PostgreSQL, color-coded tables for MySQL.</p>
           <span class="feature-tag">Performance tuning</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">💓</div>
           <h3>Health Dashboard</h3>
-          <p>Monitor active sessions, cache hit ratio, lock waits, running queries with duration, and JVM memory — auto-refreshes every 2 seconds.</p>
-          <span class="feature-tag">Real-time monitoring</span>
+          <p>Active sessions, cache hit ratio, lock waits, running queries, and JVM memory in real time.</p>
+          <span class="feature-tag">Auto-refresh monitoring</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📤</div>
           <h3>Data Export</h3>
-          <p>Export as DDL, INSERT, UPDATE, or CSV. Streams to disk so even large tables won't run out of memory. Copy or save to file.</p>
+          <p>Export as DDL, INSERT, UPDATE, or CSV. Streams to disk — handles large tables easily.</p>
           <span class="feature-tag">Bulk export</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🎨</div>
           <h3>13 Themes</h3>
-          <p>Switch instantly from the toolbar: Flat Dark, Darcula, Ocean Blue, Forest Green, Sunset Purple, Cherry Red, Arctic Frost, and more.</p>
+          <p>Switch instantly: Flat Dark, Darcula, Ocean Blue, Forest Green, Sunset Purple, and more.</p>
           <span class="feature-tag">Remembered across restarts</span>
         </div>
 
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <h3>PK / FK Icons</h3>
+          <p>Primary key and foreign key columns show distinct icons when you expand a table in the tree.</p>
+          <span class="feature-tag">Visual schema clarity</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Comment Toggle</h3>
+          <p>Ctrl+/ to comment or uncomment SQL lines instantly. Works with single and multi-line selections.</p>
+          <span class="feature-tag">Ctrl+/ shortcut</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔗</div>
+          <h3>Custom JDBC Drivers</h3>
+          <p>Load any JDBC driver JAR to connect to databases not built in. Full flexibility.</p>
+          <span class="feature-tag">Any JDBC database</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Encrypted Credentials</h3>
+          <p>Connection passwords are encrypted at rest. Your credentials stay safe on disk.</p>
+          <span class="feature-tag">Secure storage</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Self-Update</h3>
+          <p>Check for new versions from the Help menu. Downloads and installs updates automatically.</p>
+          <span class="feature-tag">One-click update</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>View Table Data</h3>
+          <p>Right-click any table to instantly view its data in a new tab. No SQL needed.</p>
+          <span class="feature-tag">Quick data preview</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🖥️</div>
+          <h3>Cross-Platform</h3>
+          <p>Runs on Windows, macOS, and Linux. Just a single JAR — no installer needed.</p>
+          <span class="feature-tag">Java 17+</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Video -->
+  <section class="demo-video" id="demo">
+    <div class="container">
+      <div class="section-header">
+        <h2>Watch it in action</h2>
+        <p>A quick walkthrough of DB Explorer's key features.</p>
+      </div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/_NXphANViKM"
+          title="DB Explorer Demo"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
       </div>
     </div>
   </section>
