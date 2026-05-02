@@ -60,71 +60,73 @@
     </div>
   </nav>
 
-  <!-- Blog Hero -->
-  <section class="blog-hero" style="padding-top: calc(var(--navbar-h, 72px) + 48px);">
-    <div class="container">
-      <h1>Astro Adept AI Labs Blog</h1>
-      <p>Articles, tips, and updates on databases, SQL, and developer tooling.</p>
-    </div>
-  </section>
+   <!-- Blog Hero -->
+   <section class="blog-hero" style="padding-top: calc(var(--navbar-h, 72px) + 48px);">
+     <div class="container">
+       <h1 style="font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px;">Astro Adept AI Labs Blog</h1>
+       <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6; max-width: 600px; margin: 0 auto;">Share knowledge, insights, and tips on databases, SQL, and developer tooling with our community.</p>
+     </div>
+   </section>
 
-  <!-- Auth Bar -->
-  <div class="blog-auth-bar" id="blogAuthBar">
-    <!-- Unauthenticated state -->
-    <button class="btn btn-primary" id="signInBtn">Sign In to Write</button>
-    <!-- Authenticated state (hidden until login) -->
-    <div class="blog-user-info" id="blogUserInfo" hidden>
-      <img class="blog-avatar" id="userAvatar" src="" alt="User avatar">
-      <span id="userName"></span>
-      <button class="btn btn-secondary" id="signOutBtn">Sign Out</button>
-      <a href="write.html" class="btn btn-primary" id="writePostBtn" hidden>Write a Post</a>
-    </div>
-  </div>
+   <!-- Auth Bar -->
+   <div class="blog-auth-bar" id="blogAuthBar" style="padding: 16px 0; background: var(--bg); border-bottom: 1px solid var(--border);">
+     <div class="container" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+       <!-- Unauthenticated state -->
+       <button class="btn btn-primary" id="signInBtn" style="margin: 0;">Sign In to Write</button>
+       <!-- Authenticated state (hidden until login) -->
+       <div class="blog-user-info" id="blogUserInfo" hidden style="display: flex; align-items: center; gap: 12px;">
+         <img class="blog-avatar" id="userAvatar" src="" alt="User avatar">
+         <span id="userName" style="color: var(--text); font-weight: 500;">User</span>
+         <button class="btn btn-secondary" id="signOutBtn" style="padding: 8px 14px; font-size: 0.85rem;">Sign Out</button>
+         <a href="write.html" class="btn btn-primary" id="writePostBtn" hidden style="padding: 8px 14px; font-size: 0.85rem;">Write a Post</a>
+       </div>
+     </div>
+   </div>
 
-  <!-- Blog Listing -->
-  <section class="blog-listing" id="blog-listing">
-    <div class="container" style="padding-top: 40px; padding-bottom: 80px;">
+   <!-- Blog Listing -->
+   <section class="blog-listing" id="blog-listing">
+     <div class="container" style="padding-top: 60px; padding-bottom: 100px;">
 
-      <!-- Tag filter bar (hidden by default) -->
-      <div class="blog-filter-bar" id="blogFilterBar">
-        <span class="blog-filter-label" id="blogFilterLabel"></span>
-        <button class="blog-filter-clear" id="blogFilterClear">Clear filter</button>
-      </div>
+       <!-- Tag filter bar (hidden by default) -->
+       <div class="blog-filter-bar" id="blogFilterBar" style="margin-bottom: 48px;">
+         <span class="blog-filter-label" id="blogFilterLabel"></span>
+         <button class="blog-filter-clear" id="blogFilterClear">Clear filter</button>
+       </div>
 
-      <!-- Post grid -->
-      <div class="blog-grid" id="blogGrid"></div>
+       <!-- Post grid -->
+       <div class="blog-grid" id="blogGrid"></div>
 
-      <!-- Empty state (hidden by default) -->
-      <div class="blog-empty" id="blogEmpty" hidden>
-        <p id="blogEmptyMsg">No posts yet — check back soon.</p>
-      </div>
+       <!-- Empty state (hidden by default) -->
+       <div class="blog-empty" id="blogEmpty" hidden>
+         <p id="blogEmptyMsg" style="font-size: 1rem;">No posts yet — check back soon.</p>
+       </div>
 
-    </div>
-  </section>
+     </div>
+   </section>
 
-  <!-- Sign-in provider modal -->
-  <div id="signInModal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
-    <div style="background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-lg); padding:40px 32px; max-width:360px; width:90%; text-align:center;">
-      <h2 style="font-size:1.25rem; font-weight:700; margin-bottom:8px;">Sign in to write</h2>
-      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:28px;">Choose a provider to continue.</p>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <button class="btn btn-secondary" id="signInGoogle" style="justify-content:center;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-          Continue with Google
-        </button>
-        <button class="btn btn-secondary" id="signInGithub" style="justify-content:center;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
-          Continue with GitHub
-        </button>
-        <button class="btn btn-secondary" id="signInFacebook" style="justify-content:center;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-          Continue with Facebook
-        </button>
-      </div>
-      <button id="signInModalClose" style="margin-top:20px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.85rem; font-family:inherit;">Cancel</button>
-      <p id="signInError" style="color:#e53e3e; font-size:0.85rem; margin-top:12px; display:none;"></p>
-    </div>
-  </div>
+   <!-- Sign-in provider modal -->
+   <div id="signInModal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
+     <div style="background:var(--bg-card); border:1px solid var(--border-light); border-radius:16px; padding:48px 40px; max-width:400px; width:90%; text-align:center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+       <h2 style="font-size:1.5rem; font-weight:800; margin-bottom:12px; letter-spacing: -0.02em;">Sign in to write</h2>
+       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:32px; line-height: 1.6;">Choose a provider to continue and start sharing your insights.</p>
+       <div style="display:flex; flex-direction:column; gap:12px;">
+         <button class="btn btn-secondary" id="signInGoogle" style="justify-content:center; width: 100%;">
+           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+           Continue with Google
+         </button>
+         <button class="btn btn-secondary" id="signInGithub" style="justify-content:center; width: 100%;">
+           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+           Continue with GitHub
+         </button>
+         <button class="btn btn-secondary" id="signInFacebook" style="justify-content:center; width: 100%;">
+           <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+           Continue with Facebook
+         </button>
+       </div>
+       <button id="signInModalClose" style="margin-top:24px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; font-family:inherit; font-weight: 500; transition: color 0.2s;">Cancel</button>
+       <p id="signInError" style="color:#e53e3e; font-size:0.85rem; margin-top:12px; display:none; background: rgba(229, 62, 62, 0.1); border: 1px solid rgba(229, 62, 62, 0.2); padding: 12px; border-radius: 8px;"></p>
+     </div>
+   </div>
 
   <!-- Footer -->
   <footer class="footer">
