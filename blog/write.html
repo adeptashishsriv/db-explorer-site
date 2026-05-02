@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Write a Post — DB Explorer Blog</title>
+  <meta name="description" content="Write or edit a blog post for DB Explorer.">
+  <link rel="icon" type="image/png" href="../images/db-explorer-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Write page form styles — uses existing CSS variables */
+    .write-page {
+      min-height: 80vh;
+      padding: 60px 0 80px;
+    }
+
+    .write-page .container {
+      max-width: 720px;
+    }
+
+    .write-heading {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .write-subheading {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 40px;
+    }
+
+    .write-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-label .required-mark {
+      color: #e53e3e;
+      margin-left: 2px;
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .form-input,
+    .form-textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 10px 14px;
+      transition: border-color 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .form-input.error,
+    .form-textarea.error {
+      border-color: #e53e3e;
+    }
+
+    .form-textarea {
+      min-height: 320px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .form-error {
+      color: #e53e3e;
+      font-size: 0.82rem;
+      margin-top: 2px;
+      display: none;
+    }
+
+    .form-error.visible {
+      display: block;
+    }
+
+    .write-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+    }
+
+    .write-submit-error {
+      color: #e53e3e;
+      font-size: 0.875rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .write-submit-error.visible {
+      display: block;
+    }
+
+    .write-loading {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .write-loading.visible {
+      display: flex;
+    }
+
+    .write-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-light);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .char-counter {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .char-counter.over-limit {
+      color: #e53e3e;
+    }
+
+    /* Auth guard overlay */
+    .auth-guard {
+      display: none;
+      min-height: 60vh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .auth-guard.visible {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-guard p {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <img src="../images/db-explorer-logo.png" alt="DB Explorer" class="nav-logo-img"> DB Explorer
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html#features">Features</a></li>
+        <li><a href="../index.html#demo">Demo</a></li>
+        <li><a href="../index.html#screenshots">Screenshots</a></li>
+        <li><a href="../index.html#databases">Databases</a></li>
+        <li><a href="../index.html#release-notes">What's New</a></li>
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="https://sourceforge.net/projects/db-explorer/files/latest/download" target="_blank" rel="noopener noreferrer" class="btn btn-nav">Download</a></li>
+        <li class="theme-switcher">
+          <button class="theme-btn" id="themeToggle" aria-label="Change theme" title="Change theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+          <div class="theme-dropdown" id="themeDropdown">
+            <button class="theme-option" data-theme="midnight"><span class="theme-swatch" style="background:#3b82f6"></span>Midnight</button>
+            <button class="theme-option" data-theme="ocean"><span class="theme-swatch" style="background:#0ea5e9"></span>Ocean Blue</button>
+            <button class="theme-option" data-theme="forest"><span class="theme-swatch" style="background:#22c55e"></span>Forest Green</button>
+            <button class="theme-option" data-theme="sunset"><span class="theme-swatch" style="background:#a855f7"></span>Sunset Purple</button>
+            <button class="theme-option" data-theme="rose"><span class="theme-swatch" style="background:#f43f5e"></span>Cherry Rose</button>
+            <button class="theme-option" data-theme="light"><span class="theme-swatch" style="background:#f8fafc; border:1px solid #cbd5e1"></span>Light</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Auth guard: shown while checking auth or if unauthenticated -->
+  <div class="auth-guard container" id="authGuard">
+    <p>Checking authentication…</p>
+  </div>
+
+  <!-- Write / Edit page — shown only to authenticated users -->
+  <main class="write-page" id="writePage" hidden>
+    <div class="container">
+      <h1 class="write-heading" id="writeHeading">Write a Post</h1>
+      <p class="write-subheading" id="writeSubheading">Publish a new article to the DB Explorer blog.</p>
+
+      <form class="write-form" id="writeForm" novalidate>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label class="form-label" for="fieldTitle">
+            Title <span class="required-mark" aria-hidden="true">*</span>
+          </label>
+          <input
+            class="form-input"
+            type="text"
+            id="fieldTitle"
+            name="title"
+            placeholder="Post title"
+            autocomplete="off"
+          >
+          <span class="form-error" id="errorTitle" role="alert">Title is required.</span>
+        </div>
+
+        <!-- Content -->
+        <div class="form-group">
+          <label class="form-label" for="fieldContent">
+            Content <span class="required-mark" aria-hidden="true">*</span>
+          </label>
+          <textarea
+            class="form-textarea"
+            id="fieldContent"
+            name="content"
+            placeholder="Write your post content here…"
+          ></textarea>
+          <span class="form-error" id="errorContent" role="alert">Content is required.</span>
+        </div>
+
+        <!-- Excerpt -->
+        <div class="form-group">
+          <label class="form-label" for="fieldExcerpt">Excerpt</label>
+          <input
+            class="form-input"
+            type="text"
+            id="fieldExcerpt"
+            name="excerpt"
+            placeholder="Short summary shown on the blog index (max 160 chars)"
+            maxlength="160"
+          >
+          <div class="char-counter" id="excerptCounter">0 / 160</div>
+          <span class="form-hint">Optional. Displayed as the card preview on the blog index.</span>
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+          <label class="form-label" for="fieldTags">Tags</label>
+          <input
+            class="form-input"
+            type="text"
+            id="fieldTags"
+            name="tags"
+            placeholder="e.g. sql, databases, tips"
+            autocomplete="off"
+          >
+          <span class="form-hint">Comma-separated. Used for filtering on the blog index.</span>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label class="form-label" for="fieldDate">
+            Date <span class="required-mark" aria-hidden="true">*</span>
+          </label>
+          <input
+            class="form-input"
+            type="date"
+            id="fieldDate"
+            name="date"
+          >
+          <span class="form-error" id="errorDate" role="alert">Date is required.</span>
+        </div>
+
+        <!-- Published toggle -->
+        <div class="form-group" style="flex-direction:row; align-items:center; gap:10px;">
+          <input
+            type="checkbox"
+            id="fieldPublished"
+            name="published"
+            style="width:18px; height:18px; accent-color:var(--primary); cursor:pointer;"
+          >
+          <label class="form-label" for="fieldPublished" style="margin:0; cursor:pointer;">
+            Publish immediately
+          </label>
+        </div>
+
+        <!-- Actions -->
+        <div class="write-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">Save Post</button>
+          <a href="index.html" class="btn btn-secondary">Cancel</a>
+          <div class="write-loading" id="writeLoading" aria-live="polite">
+            <div class="write-spinner" aria-hidden="true"></div>
+            Saving…
+          </div>
+        </div>
+
+        <!-- Submit-level error -->
+        <p class="write-submit-error" id="submitError" role="alert"></p>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="footer-logo"><img src="../images/db-explorer-logo.png" alt="DB Explorer" class="footer-logo-img"> DB Explorer</span>
+        <p>© 2026 Astro Adept AI Labs. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/adeptashishsriv/db-explorer">GitHub</a>
+        <a href="https://sourceforge.net/projects/db-explorer">SourceForge</a>
+        <a href="https://db-explorer.sourceforge.net/">Forum</a>
+        <a href="mailto:ashish@astroadept.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Inline JS: navbar, mobile menu, theme switcher ===== -->
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu toggle
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // Close menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // Theme switcher
+    var themeBtn = document.getElementById('themeToggle');
+    var themeDropdown = document.getElementById('themeDropdown');
+
+    themeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      themeDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function() {
+      themeDropdown.classList.remove('open');
+    });
+
+    themeDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var theme = btn.dataset.theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('db-explorer-theme', theme);
+        themeDropdown.classList.remove('open');
+        document.querySelectorAll('.theme-option').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+
+    // Load saved theme on page load
+    (function() {
+      var saved = localStorage.getItem('db-explorer-theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        var active = document.querySelector('.theme-option[data-theme="' + saved + '"]');
+        if (active) active.classList.add('active');
+      } else {
+        var def = document.querySelector('.theme-option[data-theme="midnight"]');
+        if (def) def.classList.add('active');
+      }
+    })();
+  </script>
+
+  <!-- ===== Write page logic (ES modules) ===== -->
+  <script type="module">
+    import { onAuthStateChanged } from './js/auth.js';
+    import { savePost } from './js/admin.js';
+    import { calculateReadingTime } from './js/blog.js';
+    import { db } from './js/firebase-init.js';
+    import {
+      doc,
+      getDoc,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // -----------------------------------------------------------------------
+    // State
+    // -----------------------------------------------------------------------
+    let currentUser = null;
+    let editPostId = null;   // set when ?edit=<postId> is in the URL
+
+    // -----------------------------------------------------------------------
+    // DOM refs
+    // -----------------------------------------------------------------------
+    const authGuard    = document.getElementById('authGuard');
+    const writePage    = document.getElementById('writePage');
+    const writeHeading = document.getElementById('writeHeading');
+    const writeSubheading = document.getElementById('writeSubheading');
+    const writeForm    = document.getElementById('writeForm');
+    const submitBtn    = document.getElementById('submitBtn');
+    const writeLoading = document.getElementById('writeLoading');
+    const submitError  = document.getElementById('submitError');
+
+    const fieldTitle     = document.getElementById('fieldTitle');
+    const fieldContent   = document.getElementById('fieldContent');
+    const fieldExcerpt   = document.getElementById('fieldExcerpt');
+    const fieldTags      = document.getElementById('fieldTags');
+    const fieldDate      = document.getElementById('fieldDate');
+    const fieldPublished = document.getElementById('fieldPublished');
+
+    const errorTitle   = document.getElementById('errorTitle');
+    const errorContent = document.getElementById('errorContent');
+    const errorDate    = document.getElementById('errorDate');
+    const excerptCounter = document.getElementById('excerptCounter');
+
+    // -----------------------------------------------------------------------
+    // Excerpt character counter
+    // -----------------------------------------------------------------------
+    fieldExcerpt.addEventListener('input', () => {
+      const len = fieldExcerpt.value.length;
+      excerptCounter.textContent = `${len} / 160`;
+      excerptCounter.classList.toggle('over-limit', len > 160);
+    });
+
+    // -----------------------------------------------------------------------
+    // Auth guard — wait for first auth state event
+    // -----------------------------------------------------------------------
+    const unsubscribe = onAuthStateChanged(user => {
+      unsubscribe(); // only need the first event
+
+      if (!user) {
+        // Not authenticated — redirect to blog index
+        window.location.href = 'index.html';
+        return;
+      }
+
+      currentUser = user;
+
+      // Show the write page
+      authGuard.classList.remove('visible');
+      authGuard.setAttribute('hidden', '');
+      writePage.removeAttribute('hidden');
+
+      // Check for ?edit=postId in the URL
+      const params = new URLSearchParams(window.location.search);
+      const editId = params.get('edit');
+      if (editId) {
+        editPostId = editId;
+        writeHeading.textContent = 'Edit Post';
+        writeSubheading.textContent = 'Update the details of this post.';
+        submitBtn.textContent = 'Update Post';
+        loadPostForEdit(editId);
+      } else {
+        // Default today's date for new posts
+        fieldDate.value = new Date().toISOString().slice(0, 10);
+        fieldPublished.checked = true;
+      }
+    });
+
+    // Show auth guard while waiting
+    authGuard.classList.add('visible');
+
+    // -----------------------------------------------------------------------
+    // Load existing post for editing
+    // -----------------------------------------------------------------------
+    async function loadPostForEdit(postId) {
+      try {
+        const docRef = doc(db, 'posts', postId);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          showSubmitError('Post not found. It may have been deleted.');
+          return;
+        }
+
+        const data = docSnap.data();
+        fieldTitle.value     = data.title     || '';
+        fieldContent.value   = data.content   || '';
+        fieldExcerpt.value   = data.excerpt   || '';
+        fieldDate.value      = data.date      || '';
+        fieldPublished.checked = data.published !== false;
+
+        // Tags: stored as array, display as comma-separated string
+        if (Array.isArray(data.tags)) {
+          fieldTags.value = data.tags.join(', ');
+        } else {
+          fieldTags.value = '';
+        }
+
+        // Update excerpt counter
+        const len = fieldExcerpt.value.length;
+        excerptCounter.textContent = `${len} / 160`;
+        excerptCounter.classList.toggle('over-limit', len > 160);
+
+      } catch (err) {
+        showSubmitError('Failed to load post: ' + err.message);
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // Validation helpers
+    // -----------------------------------------------------------------------
+    function clearErrors() {
+      [fieldTitle, fieldContent, fieldDate].forEach(f => f.classList.remove('error'));
+      [errorTitle, errorContent, errorDate].forEach(e => e.classList.remove('visible'));
+      hideSubmitError();
+    }
+
+    function showFieldError(field, errorEl) {
+      field.classList.add('error');
+      errorEl.classList.add('visible');
+    }
+
+    function showSubmitError(message) {
+      submitError.textContent = message;
+      submitError.classList.add('visible');
+    }
+
+    function hideSubmitError() {
+      submitError.textContent = '';
+      submitError.classList.remove('visible');
+    }
+
+    function validateForm() {
+      let valid = true;
+
+      if (!fieldTitle.value.trim()) {
+        showFieldError(fieldTitle, errorTitle);
+        valid = false;
+      }
+
+      if (!fieldContent.value.trim()) {
+        showFieldError(fieldContent, errorContent);
+        valid = false;
+      }
+
+      if (!fieldDate.value) {
+        showFieldError(fieldDate, errorDate);
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    // -----------------------------------------------------------------------
+    // Form submit
+    // -----------------------------------------------------------------------
+    writeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      if (!validateForm()) {
+        // Scroll to first error
+        const firstError = writeForm.querySelector('.form-input.error, .form-textarea.error');
+        if (firstError) firstError.focus();
+        return;
+      }
+
+      // Build tags array from comma-separated input
+      const tagsRaw = fieldTags.value.trim();
+      const tags = tagsRaw
+        ? tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0)
+        : [];
+
+      // Calculate reading time from word count
+      const content = fieldContent.value.trim();
+      const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+      const readingTime = calculateReadingTime(wordCount);
+
+      const postData = {
+        title:       fieldTitle.value.trim(),
+        content:     content,
+        excerpt:     fieldExcerpt.value.trim(),
+        tags:        tags,
+        date:        fieldDate.value,
+        readingTime: readingTime,
+        published:   fieldPublished.checked,
+        authorName:  currentUser.displayName || currentUser.email || '',
+        authorEmail: currentUser.email || '',
+        authorUid:   currentUser.uid || '',
+      };
+
+      // Show loading state
+      submitBtn.disabled = true;
+      writeLoading.classList.add('visible');
+
+      try {
+        await savePost(postData, editPostId || undefined);
+        // Success — redirect to blog index
+        window.location.href = 'index.html';
+      } catch (err) {
+        showSubmitError(err.message || 'Failed to save post. Please try again.');
+        submitBtn.disabled = false;
+        writeLoading.classList.remove('visible');
+      }
+    });
+
+    // Clear field-level errors on input
+    fieldTitle.addEventListener('input', () => {
+      fieldTitle.classList.remove('error');
+      errorTitle.classList.remove('visible');
+    });
+
+    fieldContent.addEventListener('input', () => {
+      fieldContent.classList.remove('error');
+      errorContent.classList.remove('visible');
+    });
+
+    fieldDate.addEventListener('change', () => {
+      fieldDate.classList.remove('error');
+      errorDate.classList.remove('visible');
+    });
+  </script>
+
+</body>
+</html>

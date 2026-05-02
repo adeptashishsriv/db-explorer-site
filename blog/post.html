@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post — DB Explorer Blog</title>
+  <meta name="description" content="Read the full article on the DB Explorer Blog.">
+  <link rel="icon" type="image/png" href="../images/db-explorer-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <img src="../images/db-explorer-logo.png" alt="DB Explorer" class="nav-logo-img"> DB Explorer
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html#features">Features</a></li>
+        <li><a href="../index.html#demo">Demo</a></li>
+        <li><a href="../index.html#screenshots">Screenshots</a></li>
+        <li><a href="../index.html#databases">Databases</a></li>
+        <li><a href="../index.html#release-notes">What's New</a></li>
+        <li><a href="index.html" aria-current="page">Blog</a></li>
+        <li><a href="https://sourceforge.net/projects/db-explorer/files/latest/download" target="_blank" rel="noopener noreferrer" class="btn btn-nav">Download</a></li>
+        <li class="theme-switcher">
+          <button class="theme-btn" id="themeToggle" aria-label="Change theme" title="Change theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+          <div class="theme-dropdown" id="themeDropdown">
+            <button class="theme-option" data-theme="midnight"><span class="theme-swatch" style="background:#3b82f6"></span>Midnight</button>
+            <button class="theme-option" data-theme="ocean"><span class="theme-swatch" style="background:#0ea5e9"></span>Ocean Blue</button>
+            <button class="theme-option" data-theme="forest"><span class="theme-swatch" style="background:#22c55e"></span>Forest Green</button>
+            <button class="theme-option" data-theme="sunset"><span class="theme-swatch" style="background:#a855f7"></span>Sunset Purple</button>
+            <button class="theme-option" data-theme="rose"><span class="theme-swatch" style="background:#f43f5e"></span>Cherry Rose</button>
+            <button class="theme-option" data-theme="light"><span class="theme-swatch" style="background:#f8fafc; border:1px solid #cbd5e1"></span>Light</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main>
+    <div class="blog-post-container" id="blogPostContainer">
+      <!-- Content injected by JS -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="footer-logo"><img src="../images/db-explorer-logo.png" alt="DB Explorer" class="footer-logo-img"> DB Explorer</span>
+        <p>© 2026 Astro Adept AI Labs. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/adeptashishsriv/db-explorer">GitHub</a>
+        <a href="https://sourceforge.net/projects/db-explorer">SourceForge</a>
+        <a href="https://db-explorer.sourceforge.net/">Forum</a>
+        <a href="mailto:ashish@astroadept.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Inline JS: navbar, mobile menu, theme switcher ===== -->
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu toggle
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // Close menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // Theme switcher
+    var themeBtn = document.getElementById('themeToggle');
+    var themeDropdown = document.getElementById('themeDropdown');
+
+    themeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      themeDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function() {
+      themeDropdown.classList.remove('open');
+    });
+
+    themeDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var theme = btn.dataset.theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('db-explorer-theme', theme);
+        themeDropdown.classList.remove('open');
+        document.querySelectorAll('.theme-option').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+
+    // Load saved theme on page load
+    (function() {
+      var saved = localStorage.getItem('db-explorer-theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        var active = document.querySelector('.theme-option[data-theme="' + saved + '"]');
+        if (active) active.classList.add('active');
+      } else {
+        var def = document.querySelector('.theme-option[data-theme="midnight"]');
+        if (def) def.classList.add('active');
+      }
+    })();
+  </script>
+
+  <!-- ===== Blog post page logic (ES modules) ===== -->
+  <script type="module">
+    import './js/firebase-init.js';
+    import { db } from './js/firebase-init.js';
+    import { renderBlogDetail } from './js/blog.js';
+    import {
+      collection,
+      doc,
+      getDoc,
+      getDocs,
+      query,
+      orderBy,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // -----------------------------------------------------------------------
+    // DOM refs
+    // -----------------------------------------------------------------------
+    const container = document.getElementById('blogPostContainer');
+
+    // -----------------------------------------------------------------------
+    // Helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Escape a string for safe use inside an HTML attribute value.
+     */
+    function escapeAttr(str) {
+      if (typeof str !== 'string') return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * Render a 404-style message with a "Back to Blog" link.
+     */
+    function render404() {
+      container.innerHTML = `
+        <a href="index.html" class="blog-back-link">← Back to Blog</a>
+        <div class="blog-empty" style="margin-top: 3rem;">
+          <p style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Post not found</p>
+          <p style="color: var(--text-muted);">The post you're looking for doesn't exist or has been removed.</p>
+          <a href="index.html" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-block;">Back to Blog</a>
+        </div>`;
+    }
+
+    /**
+     * Wire tag-pill clicks to navigate to index.html?tag=<tagname>.
+     * Called after the detail HTML is injected into the DOM.
+     */
+    function wireTagClicks() {
+      container.querySelectorAll('.blog-tag').forEach(tagBtn => {
+        tagBtn.addEventListener('click', () => {
+          const tag = tagBtn.dataset.tag;
+          if (tag) {
+            window.location.href = 'index.html?tag=' + encodeURIComponent(tag);
+          }
+        });
+      });
+    }
+
+    /**
+     * Build the prev/next navigation HTML.
+     * prevPost = older post (higher index in date-desc array)
+     * nextPost = newer post (lower index in date-desc array)
+     */
+    function renderPostNav(prevPost, nextPost) {
+      const prevHtml = prevPost
+        ? `<a class="blog-nav-prev" href="post.html?slug=${escapeAttr(prevPost.id)}">
+             ← ${escapeAttr(prevPost.title)}
+           </a>`
+        : '';
+
+      const nextHtml = nextPost
+        ? `<a class="blog-nav-next" href="post.html?slug=${escapeAttr(nextPost.id)}">
+             ${escapeAttr(nextPost.title)} →
+           </a>`
+        : '';
+
+      return `<nav class="blog-post-nav" aria-label="Post navigation">
+        ${prevHtml}
+        ${nextHtml}
+      </nav>`;
+    }
+
+    // -----------------------------------------------------------------------
+    // Main page load logic
+    // -----------------------------------------------------------------------
+    async function loadPost() {
+      // 1. Read the slug from the URL
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('slug');
+
+      if (!slug) {
+        render404();
+        return;
+      }
+
+      try {
+        // 2. Fetch the post document from Firestore
+        const postRef = doc(db, 'posts', slug);
+        const postSnap = await getDoc(postRef);
+
+        if (!postSnap.exists()) {
+          render404();
+          return;
+        }
+
+        const post = { id: postSnap.id, ...postSnap.data() };
+
+        // Update page title with the post title
+        if (post.title) {
+          document.title = post.title + ' — DB Explorer Blog';
+        }
+
+        // 3. Fetch all posts ordered by date desc to find adjacent posts
+        let prevPost = null; // older (index + 1 in desc array)
+        let nextPost = null; // newer (index - 1 in desc array)
+
+        try {
+          const postsRef = collection(db, 'posts');
+          const q = query(postsRef, orderBy('date', 'desc'));
+          const snapshot = await getDocs(q);
+
+          const allPosts = snapshot.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(p => p.published !== false);
+
+          const currentIndex = allPosts.findIndex(p => p.id === slug);
+
+          if (currentIndex !== -1) {
+            // In a date-desc array: index - 1 is newer, index + 1 is older
+            nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+            prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+          }
+        } catch (navErr) {
+          // Adjacent post fetch failed — degrade gracefully, still show the post
+          console.warn('Could not load adjacent posts:', navErr);
+        }
+
+        // 4. Render the full post detail
+        const detailHtml = renderBlogDetail(post);
+        const navHtml = renderPostNav(prevPost, nextPost);
+
+        container.innerHTML = `
+          <a href="index.html" class="blog-back-link">← Back to Blog</a>
+          <article>
+            ${detailHtml}
+          </article>
+          ${navHtml}`;
+
+        // 5. Wire tag clicks to navigate to index with tag filter
+        wireTagClicks();
+
+      } catch (err) {
+        console.error('Failed to load post:', err);
+        container.innerHTML = `
+          <a href="index.html" class="blog-back-link">← Back to Blog</a>
+          <div class="blog-empty" style="margin-top: 3rem;">
+            <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Failed to load post</p>
+            <p style="color: var(--text-muted);">Something went wrong. Please try again later.</p>
+            <a href="index.html" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-block;">Back to Blog</a>
+          </div>`;
+      }
+    }
+
+    loadPost();
+  </script>
+
+</body>
+</html>

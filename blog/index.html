@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — DB Explorer</title>
+  <meta name="description" content="Articles, tips, and updates from the DB Explorer team on databases, SQL, and developer tooling.">
+  <link rel="icon" type="image/png" href="../images/db-explorer-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <img src="../images/db-explorer-logo.png" alt="DB Explorer" class="nav-logo-img"> DB Explorer
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html#features">Features</a></li>
+        <li><a href="../index.html#demo">Demo</a></li>
+        <li><a href="../index.html#screenshots">Screenshots</a></li>
+        <li><a href="../index.html#databases">Databases</a></li>
+        <li><a href="../index.html#release-notes">What's New</a></li>
+        <li><a href="index.html" aria-current="page">Blog</a></li>
+        <li><a href="https://sourceforge.net/projects/db-explorer/files/latest/download" target="_blank" rel="noopener noreferrer" class="btn btn-nav">Download</a></li>
+        <li class="theme-switcher">
+          <button class="theme-btn" id="themeToggle" aria-label="Change theme" title="Change theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+          <div class="theme-dropdown" id="themeDropdown">
+            <button class="theme-option" data-theme="midnight"><span class="theme-swatch" style="background:#3b82f6"></span>Midnight</button>
+            <button class="theme-option" data-theme="ocean"><span class="theme-swatch" style="background:#0ea5e9"></span>Ocean Blue</button>
+            <button class="theme-option" data-theme="forest"><span class="theme-swatch" style="background:#22c55e"></span>Forest Green</button>
+            <button class="theme-option" data-theme="sunset"><span class="theme-swatch" style="background:#a855f7"></span>Sunset Purple</button>
+            <button class="theme-option" data-theme="rose"><span class="theme-swatch" style="background:#f43f5e"></span>Cherry Rose</button>
+            <button class="theme-option" data-theme="light"><span class="theme-swatch" style="background:#f8fafc; border:1px solid #cbd5e1"></span>Light</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Blog Hero -->
+  <section class="blog-hero">
+    <div class="container">
+      <h1>DB Explorer Blog</h1>
+      <p>Articles, tips, and updates on databases, SQL, and developer tooling.</p>
+    </div>
+  </section>
+
+  <!-- Auth Bar -->
+  <div class="blog-auth-bar" id="blogAuthBar">
+    <!-- Unauthenticated state -->
+    <button class="btn btn-primary" id="signInBtn">Sign In to Write</button>
+    <!-- Authenticated state (hidden until login) -->
+    <div class="blog-user-info" id="blogUserInfo" hidden>
+      <img class="blog-avatar" id="userAvatar" src="" alt="User avatar">
+      <span id="userName"></span>
+      <button class="btn btn-secondary" id="signOutBtn">Sign Out</button>
+      <a href="write.html" class="btn btn-primary" id="writePostBtn" hidden>Write a Post</a>
+    </div>
+  </div>
+
+  <!-- Blog Listing -->
+  <section class="blog-listing" id="blog-listing">
+    <div class="container" style="padding-top: 40px; padding-bottom: 80px;">
+
+      <!-- Tag filter bar (hidden by default) -->
+      <div class="blog-filter-bar" id="blogFilterBar">
+        <span class="blog-filter-label" id="blogFilterLabel"></span>
+        <button class="blog-filter-clear" id="blogFilterClear">Clear filter</button>
+      </div>
+
+      <!-- Post grid -->
+      <div class="blog-grid" id="blogGrid"></div>
+
+      <!-- Empty state (hidden by default) -->
+      <div class="blog-empty" id="blogEmpty" hidden>
+        <p id="blogEmptyMsg">No posts yet — check back soon.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Sign-in provider modal -->
+  <div id="signInModal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
+    <div style="background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-lg); padding:40px 32px; max-width:360px; width:90%; text-align:center;">
+      <h2 style="font-size:1.25rem; font-weight:700; margin-bottom:8px;">Sign in to write</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:28px;">Choose a provider to continue.</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <button class="btn btn-secondary" id="signInGoogle" style="justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="btn btn-secondary" id="signInGithub" style="justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          Continue with GitHub
+        </button>
+        <button class="btn btn-secondary" id="signInFacebook" style="justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          Continue with Facebook
+        </button>
+      </div>
+      <button id="signInModalClose" style="margin-top:20px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.85rem; font-family:inherit;">Cancel</button>
+      <p id="signInError" style="color:#e53e3e; font-size:0.85rem; margin-top:12px; display:none;"></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="footer-logo"><img src="../images/db-explorer-logo.png" alt="DB Explorer" class="footer-logo-img"> DB Explorer</span>
+        <p>© 2026 Astro Adept AI Labs. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/adeptashishsriv/db-explorer">GitHub</a>
+        <a href="https://sourceforge.net/projects/db-explorer">SourceForge</a>
+        <a href="https://db-explorer.sourceforge.net/">Forum</a>
+        <a href="mailto:ashish@astroadept.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Inline JS: navbar, mobile menu, theme switcher ===== -->
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu toggle
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // Close menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // Theme switcher
+    var themeBtn = document.getElementById('themeToggle');
+    var themeDropdown = document.getElementById('themeDropdown');
+
+    themeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      themeDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function() {
+      themeDropdown.classList.remove('open');
+    });
+
+    themeDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
+    document.querySelectorAll('.theme-option').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var theme = btn.dataset.theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('db-explorer-theme', theme);
+        themeDropdown.classList.remove('open');
+        document.querySelectorAll('.theme-option').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+
+    // Load saved theme on page load
+    (function() {
+      var saved = localStorage.getItem('db-explorer-theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        var active = document.querySelector('.theme-option[data-theme="' + saved + '"]');
+        if (active) active.classList.add('active');
+      } else {
+        var def = document.querySelector('.theme-option[data-theme="midnight"]');
+        if (def) def.classList.add('active');
+      }
+    })();
+  </script>
+
+  <!-- ===== Blog page logic (ES modules) ===== -->
+  <script type="module">
+    import './js/firebase-init.js';
+    import {
+      signInWithProvider,
+      signOut,
+      onAuthStateChanged,
+      isAdmin,
+    } from './js/auth.js';
+    import {
+      renderBlogCard,
+      filterPostsByTag,
+      sortPostsByDate,
+    } from './js/blog.js';
+    import { deletePost } from './js/admin.js';
+    import { db } from './js/firebase-init.js';
+    import {
+      collection,
+      getDocs,
+      query,
+      orderBy,
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // -----------------------------------------------------------------------
+    // State
+    // -----------------------------------------------------------------------
+    let allPosts = [];       // raw post objects fetched from Firestore
+    let currentUser = null;  // Firebase Auth user or null
+    let activeTag = null;    // currently active tag filter
+
+    // -----------------------------------------------------------------------
+    // DOM refs
+    // -----------------------------------------------------------------------
+    const blogGrid       = document.getElementById('blogGrid');
+    const blogEmpty      = document.getElementById('blogEmpty');
+    const blogEmptyMsg   = document.getElementById('blogEmptyMsg');
+    const blogFilterBar  = document.getElementById('blogFilterBar');
+    const blogFilterLabel = document.getElementById('blogFilterLabel');
+    const blogFilterClear = document.getElementById('blogFilterClear');
+    const signInBtn      = document.getElementById('signInBtn');
+    const signOutBtn     = document.getElementById('signOutBtn');
+    const blogUserInfo   = document.getElementById('blogUserInfo');
+    const userAvatar     = document.getElementById('userAvatar');
+    const userName       = document.getElementById('userName');
+    const writePostBtn   = document.getElementById('writePostBtn');
+    const signInModal    = document.getElementById('signInModal');
+    const signInError    = document.getElementById('signInError');
+
+    // -----------------------------------------------------------------------
+    // Render helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Inject post cards into #blogGrid for the given posts array.
+     * Respects the current user (admin controls) and active tag filter.
+     */
+    function renderGrid(posts) {
+      const filtered = activeTag ? filterPostsByTag(posts, activeTag) : posts;
+
+      blogGrid.innerHTML = filtered.map(p => renderBlogCard(p, currentUser)).join('');
+
+      // Show / hide empty state
+      if (filtered.length === 0) {
+        blogEmpty.removeAttribute('hidden');
+        blogEmpty.classList.add('visible');
+        blogEmptyMsg.textContent = activeTag
+          ? `No posts found for tag: ${activeTag}.`
+          : 'No posts yet — check back soon.';
+      } else {
+        blogEmpty.setAttribute('hidden', '');
+        blogEmpty.classList.remove('visible');
+      }
+
+      // Wire tag-pill clicks
+      blogGrid.querySelectorAll('.blog-tag').forEach(tagBtn => {
+        tagBtn.addEventListener('click', () => {
+          setActiveTag(tagBtn.dataset.tag);
+        });
+      });
+
+      // Wire delete buttons
+      blogGrid.querySelectorAll('.blog-delete-btn').forEach(delBtn => {
+        delBtn.addEventListener('click', async () => {
+          const postId = delBtn.dataset.id;
+          const card   = delBtn.closest('.blog-card');
+          const title  = card ? card.querySelector('.blog-card-title')?.textContent?.trim() : postId;
+
+          if (!confirm(`Are you sure you want to delete "${title}"? This cannot be undone.`)) {
+            return;
+          }
+
+          delBtn.disabled = true;
+          delBtn.textContent = 'Deleting…';
+
+          try {
+            await deletePost(postId);
+            // Remove from local state and re-render
+            allPosts = allPosts.filter(p => p.id !== postId);
+            renderGrid(allPosts);
+          } catch (err) {
+            alert('Delete failed: ' + err.message);
+            delBtn.disabled = false;
+            delBtn.textContent = 'Delete';
+          }
+        });
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // Tag filter
+    // -----------------------------------------------------------------------
+
+    function setActiveTag(tag) {
+      activeTag = tag || null;
+
+      if (activeTag) {
+        blogFilterLabel.textContent = `Filtered by: ${activeTag}`;
+        blogFilterBar.classList.add('visible');
+      } else {
+        blogFilterBar.classList.remove('visible');
+        blogFilterLabel.textContent = '';
+      }
+
+      renderGrid(allPosts);
+    }
+
+    blogFilterClear.addEventListener('click', () => setActiveTag(null));
+
+    // -----------------------------------------------------------------------
+    // Auth bar
+    // -----------------------------------------------------------------------
+
+    function updateAuthBar(user) {
+      currentUser = user;
+
+      if (user) {
+        signInBtn.style.display = 'none';
+        blogUserInfo.removeAttribute('hidden');
+        userAvatar.src  = user.photoURL || '';
+        userAvatar.alt  = user.displayName || 'User avatar';
+        userName.textContent = user.displayName || user.email || '';
+
+        if (isAdmin(user)) {
+          writePostBtn.removeAttribute('hidden');
+        } else {
+          writePostBtn.setAttribute('hidden', '');
+        }
+      } else {
+        signInBtn.style.display = '';
+        blogUserInfo.setAttribute('hidden', '');
+      }
+
+      // Re-render cards so admin controls appear / disappear
+      renderGrid(allPosts);
+    }
+
+    // -----------------------------------------------------------------------
+    // Sign-in modal
+    // -----------------------------------------------------------------------
+
+    function showSignInModal() {
+      signInModal.style.display = 'flex';
+      signInError.style.display = 'none';
+      signInError.textContent = '';
+    }
+
+    function hideSignInModal() {
+      signInModal.style.display = 'none';
+    }
+
+    async function handleProviderSignIn(providerName) {
+      signInError.style.display = 'none';
+      try {
+        await signInWithProvider(providerName);
+        hideSignInModal();
+      } catch (err) {
+        signInError.textContent = err.message;
+        signInError.style.display = 'block';
+      }
+    }
+
+    signInBtn.addEventListener('click', showSignInModal);
+    document.getElementById('signInModalClose').addEventListener('click', hideSignInModal);
+    document.getElementById('signInGoogle').addEventListener('click',   () => handleProviderSignIn('google'));
+    document.getElementById('signInGithub').addEventListener('click',   () => handleProviderSignIn('github'));
+    document.getElementById('signInFacebook').addEventListener('click', () => handleProviderSignIn('facebook'));
+
+    // Close modal on backdrop click
+    signInModal.addEventListener('click', e => {
+      if (e.target === signInModal) hideSignInModal();
+    });
+
+    signOutBtn.addEventListener('click', async () => {
+      try {
+        await signOut();
+      } catch (err) {
+        console.error('Sign-out error:', err);
+      }
+    });
+
+    // -----------------------------------------------------------------------
+    // Auth state subscription
+    // -----------------------------------------------------------------------
+    onAuthStateChanged(user => updateAuthBar(user));
+
+    // -----------------------------------------------------------------------
+    // URL-based tag filter (from post.html tag links)
+    // -----------------------------------------------------------------------
+    function checkUrlTagParam() {
+      const params = new URLSearchParams(window.location.search);
+      const tagParam = params.get('tag');
+      if (tagParam) {
+        setActiveTag(tagParam);
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // Fetch posts from Firestore on page load
+    // -----------------------------------------------------------------------
+    async function loadPosts() {
+      try {
+        const postsRef = collection(db, 'posts');
+        const q        = query(postsRef, orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+
+        allPosts = snapshot.docs
+          .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+          .filter(p => p.published !== false); // only show published posts
+
+        // Apply URL tag param after posts are loaded
+        checkUrlTagParam();
+
+        // If no URL tag param, render all posts
+        if (!activeTag) {
+          renderGrid(allPosts);
+        }
+      } catch (err) {
+        console.error('Failed to load posts:', err);
+        blogEmpty.removeAttribute('hidden');
+        blogEmpty.classList.add('visible');
+        blogEmptyMsg.textContent = 'Failed to load posts. Please try again later.';
+      }
+    }
+
+    loadPosts();
+  </script>
+
+</body>
+</html>
