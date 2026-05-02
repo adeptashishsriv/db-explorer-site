@@ -1,7 +1,8 @@
 // Admin CRUD module — Firestore write and delete operations
-// Only the designated admin may create, update, or delete posts.
-// Client-side admin check is performed before every Firestore call;
-// Firebase Security Rules enforce the same restriction server-side.
+// Any authenticated user may CREATE posts.
+// Only the designated admin may UPDATE or DELETE posts.
+// Client-side checks are performed before every Firestore call;
+// Firebase Security Rules enforce the same restrictions server-side.
 
 import { db } from './firebase-init.js';
 import { getCurrentUser, isAdmin } from './auth.js';
@@ -19,13 +20,8 @@ const PERMISSION_ERROR = 'You do not have permission to perform this action.';
 /**
  * Save a blog post to Firestore.
  *
- * - If `postId` is provided (truthy): updates the existing document at
- *   `posts/{postId}` using `setDoc` with `merge: true` and sets `updatedAt`.
- * - If `postId` is NOT provided (falsy): creates a new document in the
- *   `posts` collection using `addDoc` and sets both `createdAt` and `updatedAt`.
- *
- * Checks `isAdmin(getCurrentUser())` client-side before calling Firestore.
- * Catches Firestore `permission-denied` errors and rethrows with a user-friendly message.
+ * - CREATE (no postId): any authenticated user may create a new post.
+ * - UPDATE (with postId): only the admin may update an existing post.
  *
  * @param {{
  *   title: string,
@@ -38,19 +34,23 @@ const PERMISSION_ERROR = 'You do not have permission to perform this action.';
  *   content: string,
  *   readingTime: number,
  *   published: boolean
- * }} postData - The post fields to write.
- * @param {string|null|undefined} [postId] - Existing document ID for updates; omit or pass falsy to create.
- * @returns {Promise<import('firebase/firestore').DocumentReference>} The document reference.
- * @throws {Error} If the current user is not admin, or if Firestore returns permission-denied.
+ * }} postData
+ * @param {string|null|undefined} [postId]
+ * @returns {Promise<import('firebase/firestore').DocumentReference>}
  */
 export async function savePost(postData, postId) {
-  if (!isAdmin(getCurrentUser())) {
-    throw new Error(PERMISSION_ERROR);
-  }
+  const user = getCurrentUser();
 
-  try {
-    if (postId) {
-      // Update existing document
+  if (postId) {
+    // UPDATE — admin OR the post's own author
+    if (!user) {
+      throw new Error(PERMISSION_ERROR);
+    }
+    const isOwner = postData.authorUid && user.uid === postData.authorUid;
+    if (!isAdmin(user) && !isOwner) {
+      throw new Error(PERMISSION_ERROR);
+    }
+    try {
       const docRef = doc(db, 'posts', postId);
       await setDoc(
         docRef,
@@ -58,8 +58,16 @@ export async function savePost(postData, postId) {
         { merge: true }
       );
       return docRef;
-    } else {
-      // Create new document
+    } catch (error) {
+      if (error.code === 'permission-denied') throw new Error(PERMISSION_ERROR);
+      throw error;
+    }
+  } else {
+    // CREATE — any authenticated user
+    if (!user) {
+      throw new Error(PERMISSION_ERROR);
+    }
+    try {
       const colRef = collection(db, 'posts');
       const docRef = await addDoc(colRef, {
         ...postData,
@@ -67,12 +75,10 @@ export async function savePost(postData, postId) {
         updatedAt: serverTimestamp(),
       });
       return docRef;
+    } catch (error) {
+      if (error.code === 'permission-denied') throw new Error(PERMISSION_ERROR);
+      throw error;
     }
-  } catch (error) {
-    if (error.code === 'permission-denied') {
-      throw new Error(PERMISSION_ERROR);
-    }
-    throw error;
   }
 }
 

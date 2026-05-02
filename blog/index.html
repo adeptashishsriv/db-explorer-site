@@ -192,7 +192,6 @@
       signInWithProvider,
       signOut,
       onAuthStateChanged,
-      isAdmin,
     } from './js/auth.js';
     import {
       renderBlogCard,
@@ -327,11 +326,8 @@
         userAvatar.alt  = user.displayName || 'User avatar';
         userName.textContent = user.displayName || user.email || '';
 
-        if (isAdmin(user)) {
-          writePostBtn.removeAttribute('hidden');
-        } else {
-          writePostBtn.setAttribute('hidden', '');
-        }
+        // Show "Write a Post" for any authenticated user
+        writePostBtn.removeAttribute('hidden');
       } else {
         signInBtn.style.display = '';
         blogUserInfo.setAttribute('hidden', '');

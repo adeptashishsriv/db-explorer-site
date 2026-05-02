@@ -23,8 +23,15 @@ service cloud.firestore {
       // Any authenticated user can create a new post
       allow create: if request.auth != null;
 
-      // Only the designated admin (verified email) can update or delete posts
-      allow update, delete: if request.auth != null
+      // Only the designated admin OR the post's own author can update
+      allow update: if request.auth != null
+        && (
+          (request.auth.token.email == 'adeptashish@gmail.com' && request.auth.token.email_verified == true)
+          || request.auth.uid == resource.data.authorUid
+        );
+
+      // Only the designated admin can delete posts
+      allow delete: if request.auth != null
         && request.auth.token.email == 'adeptashish@gmail.com'
         && request.auth.token.email_verified == true;
     }

@@ -172,7 +172,11 @@ export function renderBlogCard(post, user) {
         <a class="btn btn-secondary btn-sm" href="write.html?edit=${idAttr}">Edit</a>
         <button class="btn btn-danger btn-sm blog-delete-btn" data-id="${idAttr}">Delete</button>
       </div>`
-    : '';
+    : (user && post.authorUid && user.uid === post.authorUid)
+      ? `<div class="blog-admin-controls">
+          <a class="btn btn-secondary btn-sm" href="write.html?edit=${idAttr}">Edit</a>
+        </div>`
+      : '';
 
   return `<article class="blog-card" data-tags="${tagsAttr}" data-id="${idAttr}">
   <div class="blog-card-meta">${escapeAttr(formattedDate)} · ${escapeAttr(readingTimeDisplay)}</div>
