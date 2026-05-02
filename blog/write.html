@@ -192,6 +192,7 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">← Home</a></li>
         <li><a href="index.html">Blog</a></li>
         <li><a href="https://sourceforge.net/projects/db-explorer/files/latest/download" target="_blank" rel="noopener noreferrer" class="btn btn-nav">Download DB Explorer</a></li>
         <li class="theme-switcher">
@@ -212,12 +213,12 @@
   </nav>
 
   <!-- Auth guard: shown while checking auth or if unauthenticated -->
-  <div class="auth-guard container" id="authGuard">
+  <div class="auth-guard container" id="authGuard" style="padding-top: calc(var(--navbar-h, 72px) + 32px);">
     <p>Checking authentication…</p>
   </div>
 
   <!-- Write / Edit page — shown only to authenticated users -->
-  <main class="write-page" id="writePage" hidden>
+  <main class="write-page" id="writePage" hidden style="padding-top: calc(var(--navbar-h, 72px) + 32px);">
     <div class="container">
       <h1 class="write-heading" id="writeHeading">Write a Post</h1>
       <p class="write-subheading" id="writeSubheading">Publish a new article to the Astro Adept AI Labs blog.</p>
