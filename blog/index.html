@@ -150,7 +150,7 @@
         <img src="../images/astro-adept-ai-labs.png" alt="Astro Adept AI Labs" class="nav-logo-img">
         <div>
           Astro Adept AI Labs Blog
-          <span class="nav-tagline">Your platform to express ideas, share knowledge, and contribute to the evolving landscape of modern technology.</span>
+          <span class="nav-tagline">Share knowledge on databases & tooling.</span>
         </div>
       </a>
       <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">
@@ -184,6 +184,9 @@
     </div>
   </nav>
 
+  <!-- Separator -->
+  <div class="container" style="height: 1px; background: var(--border); margin-top: 20px; margin-bottom: 20px;"></div>
+
    <!-- Blog Listing -->
    <section class="blog-listing" id="blog-listing">
      <div class="container" style="padding-top: 30px; padding-bottom: 100px;">
@@ -213,6 +216,7 @@
         <p>© 2026 Astro Adept AI Labs. All rights reserved.</p>
       </div>
       <div class="footer-links">
+        <a href="https://github.com/adeptashishsriv/db-explorer">GitHub</a>
         <a href="https://sourceforge.net/projects/db-explorer">SourceForge</a>
         <a href="mailto:ashish@astroadept.com">Contact</a>
       </div>
@@ -229,7 +233,7 @@
     // Mobile menu toggle
     function toggleMenu() {
       document.getElementById('navLinks').classList.toggle('open');
-    });
+    }
 
     // Close menu on link click
     document.querySelectorAll('.nav-links a').forEach(link => {
